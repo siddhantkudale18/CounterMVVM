@@ -29,19 +29,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.countermvvm.ui.theme.CounterMVVMTheme
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val viewModel: CounterViewModel = viewModel()
             CounterMVVMTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                        TheCounterApp()
+                        TheCounterApp(viewModel)
                 }
             }
         }
@@ -49,7 +53,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TheCounterApp(){
+fun TheCounterApp(viewModel: CounterViewModel){
     val count = remember { mutableStateOf(0) }
 
     fun increment(){
@@ -65,14 +69,14 @@ fun TheCounterApp(){
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(text = "Count: ${count.value}",
+        Text(text = "Count: ${viewModel.count.value}",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
         Row{
             Button(
-                onClick = {increment()},
+                onClick = {viewModel.increment()},
                 modifier = Modifier.padding(16.dp),
                 shape = RoundedCornerShape(20)
             )
@@ -80,7 +84,7 @@ fun TheCounterApp(){
                 Text("Increment")
             }
             Button(
-                onClick = {decrement()},
+                onClick = {viewModel.decrement()},
                 modifier = Modifier.padding(16.dp),
                 shape = RoundedCornerShape(20)
             )
